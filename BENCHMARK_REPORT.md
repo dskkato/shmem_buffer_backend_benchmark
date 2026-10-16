@@ -267,7 +267,7 @@ The 16-way rerun itself is orchestrated with:
 ```bash
 source ~/ros2_lyrical/install/setup.bash
 source install/setup.bash
-ros2 run shared_buffer_backend_benchmark run_16way_benchmark.py \
+ros2 run shmem_buffer_backend_benchmark run_16way_benchmark.py \
   --output-dir benchmark-results-16way-rerun \
   --overwrite
 ```

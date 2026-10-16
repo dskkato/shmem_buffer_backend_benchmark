@@ -44,8 +44,8 @@ def command(role, mode, size, count, rate, warmup, affinity, raw_output=None):
     command = [
         "ros2",
         "run",
-        "shared_buffer_backend_benchmark",
-        "shared_buffer_backend_e2e_node",
+        "shmem_buffer_backend_benchmark",
+        "shmem_buffer_backend_e2e_node",
         "--role",
         role,
         "--mode",

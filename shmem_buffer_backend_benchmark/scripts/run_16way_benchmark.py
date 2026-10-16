@@ -102,7 +102,7 @@ def main():
     parser.add_argument(
         "--workspace-root",
         type=Path,
-        help="ROS 2 workspace containing src/shared_buffer_backend",
+        help="ROS 2 workspace containing src/shmem_buffer_backend",
     )
     parser.add_argument(
         "--ros2-root", type=Path, default=Path("~/ros2_lyrical").expanduser(),
@@ -165,7 +165,7 @@ def main():
         else ros2_root / "src/ros2/rmw_fastrtps"
     )
     benchmark_root = script_path.parents[2]
-    runner = benchmark_root / "shared_buffer_backend_benchmark/scripts/run_e2e_benchmark.py"
+    runner = benchmark_root / "shmem_buffer_backend_benchmark/scripts/run_e2e_benchmark.py"
     patch_dir = benchmark_root / "patches"
     underlay_setup = ros2_root / "install/setup.bash"
     workspace_setup = workspace_root / "install/setup.bash"

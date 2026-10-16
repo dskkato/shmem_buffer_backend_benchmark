@@ -128,7 +128,7 @@ Build the benchmark package after sourcing the Lyrical ROS 2 underlay:
 ```bash
 cd ~/workspace/ros2_ws
 source ~/ros2_lyrical/install/setup.bash
-colcon build --packages-select shared_buffer_backend_benchmark \
+colcon build --packages-select shmem_buffer_backend_benchmark \
   --cmake-args -DCMAKE_BUILD_TYPE=Release
 source install/setup.bash
 ```
@@ -139,7 +139,7 @@ Start a local router and run the zenoh matrix:
 source ~/ros2_lyrical/install/setup.bash
 source install/setup.bash
 ros2 run rmw_zenoh_cpp rmw_zenohd > /tmp/shared-buffer-zenoh-router.log 2>&1 &
-python3 src/shared_buffer_backend_benchmark/shared_buffer_backend_benchmark/scripts/run_e2e_benchmark.py \
+python3 src/shared_buffer_backend_benchmark/shmem_buffer_backend_benchmark/scripts/run_e2e_benchmark.py \
   --rmw-implementation rmw_zenoh_cpp \
   --variant zenoh \
   --sizes 64,1024,4096,16384,65536,262144,1048576,4194304,16777216 \
