@@ -15,7 +15,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 find_package(ament_cmake REQUIRED)
-find_package(shared_buffer REQUIRED)
+find_package(shmem_buffer REQUIRED)
 find_package(shmem_buffer_backend REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
@@ -23,7 +23,7 @@ find_package(sensor_msgs REQUIRED)
 add_executable(shmem_buffer_backend_e2e_node src/shmem_buffer_backend_e2e_node.cpp)
 target_link_libraries(
   shmem_buffer_backend_e2e_node
-  shared_buffer::shared_buffer
+  shmem_buffer::shmem_buffer
   rclcpp::rclcpp
   ${sensor_msgs_TARGETS}
 )

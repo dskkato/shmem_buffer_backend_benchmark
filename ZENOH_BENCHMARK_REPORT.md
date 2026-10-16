@@ -40,7 +40,7 @@ The zenoh matrix contains one implementation:
 - Payloads: 64 B, 1 KiB, 4 KiB, 16 KiB, 64 KiB, 256 KiB, 1 MiB, 4 MiB,
   and 16 MiB
 - Communication: `inter_process` and `intra_process_va`
-- Buffer modes: CPU and shared_buffer
+- Buffer modes: CPU and shmem_buffer
 - Repeats: 5
 - Messages per case: 30 at 10 Hz
 - Warm-up: first 10 messages excluded; 20 measured samples remain
@@ -97,22 +97,22 @@ At selected payload sizes, the inter-process CPU and shared-buffer results are:
 | Payload / backend | fastrtps lazy p50 / p95 (µs) | zenoh p50 / p95 (µs) | Zenoh p50 change |
 |---|---:|---:|---:|
 | 64 B CPU | 680.1 / 754.4 | 891.4 / 1,072.3 | +31.1% |
-| 64 B shared_buffer | 944.0 / 1,073.8 | 949.7 / 1,077.0 | +0.6% |
+| 64 B shmem_buffer | 944.0 / 1,073.8 | 949.7 / 1,077.0 | +0.6% |
 | 1 MiB CPU | 13,005.8 / 13,638.0 | 4,412.8 / 4,877.5 | -66.1% |
-| 1 MiB shared_buffer | 935.6 / 1,050.5 | 971.4 / 1,102.7 | +3.8% |
+| 1 MiB shmem_buffer | 935.6 / 1,050.5 | 971.4 / 1,102.7 | +3.8% |
 | 4 MiB CPU | 15,374.4 / 16,209.4 | 6,280.9 / 10,524.6 | -59.1% |
-| 4 MiB shared_buffer | 915.6 / 1,049.2 | 917.1 / 1,057.0 | +0.2% |
+| 4 MiB shmem_buffer | 915.6 / 1,049.2 | 917.1 / 1,057.0 | +0.2% |
 | 16 MiB CPU | 14,786.7 / 15,270.8 | 16,721.3 / 22,369.4 | +13.1% |
-| 16 MiB shared_buffer | 727.6 / 805.7 | 768.0 / 860.5 | +5.6% |
+| 16 MiB shmem_buffer | 727.6 / 805.7 | 768.0 / 860.5 | +5.6% |
 
 ## Publisher-side timing at 1 MiB
 
 | Backend / metric | fastrtps lazy p50 / p95 (µs) | zenoh p50 / p95 (µs) | Zenoh p50 change |
 |---|---:|---:|---:|
 | CPU `publish()` | 1,499.0 / 1,731.8 | 3,094.9 / 3,414.9 | +106.5% |
-| shared_buffer `publish()` | 421.5 / 474.4 | 173.4 / 200.7 | -58.8% |
+| shmem_buffer `publish()` | 421.5 / 474.4 | 173.4 / 200.7 | -58.8% |
 | CPU end-to-end | 13,005.8 / 13,638.0 | 4,412.8 / 4,877.5 | -66.1% |
-| shared_buffer end-to-end | 935.6 / 1,050.5 | 971.4 / 1,102.7 | +3.8% |
+| shmem_buffer end-to-end | 935.6 / 1,050.5 | 971.4 / 1,102.7 | +3.8% |
 
 ![1 MiB shared-buffer raw distributions](figures/zenoh-comparison/1m-memfd-distributions.png)
 
@@ -146,7 +146,7 @@ python3 src/shared_buffer_backend_benchmark/shmem_buffer_backend_benchmark/scrip
   --count 30 --rate-hz 10 --warmup 10 --repeats 5 --seed 20260812 \
   --publisher-affinity 8 --subscriber-affinity 9 --intra-affinity 8 \
   --discovery-wait 3 \
-  --communications inter_process,intra_process_va --modes cpu,shared_buffer \
+  --communications inter_process,intra_process_va --modes cpu,shmem_buffer \
   --output src/shared_buffer_backend_benchmark/benchmark-results-zenoh/zenoh.csv \
   --raw-output src/shared_buffer_backend_benchmark/benchmark-results-zenoh/raw/zenoh.csv
 ```
@@ -156,7 +156,7 @@ environment:
 
 ```bash
 source .venv/bin/activate
-cd src/shared_buffer_backend_benchmark
+cd src/shmem_buffer_backend_benchmark
 python3 tools/plot_zenoh_comparison.py \
   --data-dir benchmark-results-zenoh \
   --fastrtps-dir benchmark-results-16way-rerun \
@@ -179,7 +179,7 @@ The 20 samples per repeat are sufficient for the aggregate comparison, but
 p95 and p99 are adjacent order statistics under the benchmark's percentile
 rule. Raw CSVs should be used for detailed tail analysis.
 
-Finally, `shared_buffer` here refers to the rosidl buffer backend path. On Linux
+Finally, `shmem_buffer` here refers to the rosidl buffer backend path. On Linux
 that backend uses anonymous memfd allocations internally. It is distinct from
 enabling Zenoh's own transport-level shared-memory optimization.
 

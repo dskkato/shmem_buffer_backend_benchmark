@@ -19,7 +19,7 @@ import sys
 
 DEFAULT_SIZES = "64,1024,4096,16384,65536,262144,1048576,4194304,16777216"
 DEFAULT_COMMUNICATIONS = "inter_process,intra_process_va"
-DEFAULT_MODES = "cpu,shared_buffer"
+DEFAULT_MODES = "cpu,shmem_buffer"
 
 VARIANTS = {
     "baseline": None,

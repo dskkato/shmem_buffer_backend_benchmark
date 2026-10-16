@@ -11,7 +11,7 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <depend>shared_buffer</depend>
+  <depend>shmem_buffer</depend>
   <depend>shmem_buffer_backend</depend>
   <depend>rclcpp</depend>
   <depend>rcutils</depend>
