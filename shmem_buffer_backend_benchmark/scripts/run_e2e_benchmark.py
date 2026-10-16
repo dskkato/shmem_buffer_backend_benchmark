@@ -249,7 +249,7 @@ def main():
     )
     parser.add_argument("--variant", default="unspecified")
     parser.add_argument("--communications", default="inter_process,intra_process_va")
-    parser.add_argument("--modes", default="cpu,shmem_buffer")
+    parser.add_argument("--modes", default="cpu,shmem")
     parser.add_argument("--publisher-affinity")
     parser.add_argument("--subscriber-affinity")
     parser.add_argument("--intra-affinity")

@@ -116,8 +116,8 @@ public:
                                                       ? rclcpp::IntraProcessSetting::Enable
                                                       : rclcpp::IntraProcessSetting::Disable;
       subscription_options.intra_process_buffer_type = rclcpp::IntraProcessBufferType::SharedPtr;
-      if (mode_ == "shmem_buffer") {
-        subscription_options.acceptable_buffer_backends = "shmem_buffer";
+      if (mode_ == "shmem") {
+        subscription_options.acceptable_buffer_backends = "shmem";
       }
       sub_ = create_subscription<Image>(
         "shmem_buffer_benchmark_image", qos,
@@ -146,7 +146,7 @@ private:
     msg->step = static_cast<std::uint32_t>(size_);
 
     std::uintptr_t published_data_address = 0;
-    if (mode_ == "shmem_buffer") {
+    if (mode_ == "shmem") {
       msg->data = shmem_buffer::allocate_buffer(size_);
       auto view = shmem_buffer::from_output_buffer(msg->data);
       std::memset(view.get_ptr(), static_cast<int>(sent_ & 0xff), size_);
@@ -179,7 +179,7 @@ private:
   void receive(ImageConstSharedPtr msg)
   {
     const auto backend = msg->data.get_backend_type();
-    if ((mode_ == "shmem_buffer" && backend != "shmem_buffer") ||
+    if ((mode_ == "shmem" && backend != "shmem") ||
       (mode_ == "cpu" && backend != "cpu"))
     {
       std::cerr << "RESULT,error,backend_mismatch," << communication_ << ',' << mode_ << ','
@@ -191,7 +191,7 @@ private:
     std::uintptr_t received_data_address = 0;
     volatile std::uint8_t sample = 0;
     Clock::time_point end;
-    if (mode_ == "shmem_buffer") {
+    if (mode_ == "shmem") {
       auto view = shmem_buffer::from_input_buffer(msg->data);
       received_data_address = reinterpret_cast<std::uintptr_t>(view.get_ptr());
       sample = view.get_ptr()[0];
@@ -287,7 +287,7 @@ int main(int argc, char ** argv)
   const bool use_intra_process = role == "intra";
   if (
     (role != "pub" && role != "sub" && role != "intra") ||
-    (mode != "cpu" && mode != "shmem_buffer"))
+    (mode != "cpu" && mode != "shmem"))
   {
     rclcpp::shutdown();
     return 2;

@@ -17,7 +17,7 @@ SIZES = (64, 1024, 4096, 16384, 65536, 262144, 1048576, 4194304, 16777216)
 VARIANTS = ("lazy", "zenoh")
 FASTRTPS_COLORS = {
     "cpu": "#5E81AC",
-    "shmem_buffer": "#D08770",
+    "shmem": "#D08770",
 }
 ZENOH_COLOR = "#00A6D6"
 LABELS = {
@@ -26,9 +26,9 @@ LABELS = {
 }
 PATHS = (
     ("inter_process", "cpu", "Inter-process CPU"),
-    ("inter_process", "shmem_buffer", "Inter-process shared-memory buffer"),
+    ("inter_process", "shmem", "Inter-process shared-memory buffer"),
     ("intra_process_va", "cpu", "Intra-process CPU"),
-    ("intra_process_va", "shmem_buffer", "Intra-process shared-memory buffer"),
+    ("intra_process_va", "shmem", "Intra-process shared-memory buffer"),
 )
 LATENCY_YLIM = (10, 3e4)
 
@@ -84,10 +84,10 @@ def setup_axis(axis):
 def plot_shmem_buffer_latency(data, output):
     figure, axis = plt.subplots(figsize=(10.5, 5.8))
     for variant in VARIANTS:
-        values = [data[variant][("inter_process", "shmem_buffer", size)]["e2e"]["p50"] for size in SIZES]
+        values = [data[variant][("inter_process", "shmem", size)]["e2e"]["p50"] for size in SIZES]
         axis.plot(
             SIZES, values, marker="o", linewidth=2, markersize=4,
-            color=color_for(variant, "shmem_buffer"),
+            color=color_for(variant, "shmem"),
             linestyle="--" if variant == "zenoh" else "-",
             label=LABELS[variant],
         )
@@ -105,7 +105,7 @@ def plot_shmem_buffer_latency(data, output):
 def plot_backend_latency(data, output):
     figure, axes = plt.subplots(1, 2, figsize=(12, 5.2), sharey=True)
     for axis, backend, title in zip(
-        axes, ("cpu", "shmem_buffer"), ("CPU backend", "shared-memory backend")
+        axes, ("cpu", "shmem"), ("CPU backend", "shared-memory backend")
     ):
         for variant, linestyle in (("lazy", "-"), ("zenoh", "--")):
             for percentile_name, alpha in (("p50", 1.0), ("p95", 0.48)):
@@ -139,14 +139,14 @@ def plot_one_mib_distributions(raw, output):
         (axes[1], "publish", "Publisher publish() duration", 1200, 50),
     ):
         for variant in VARIANTS:
-            values = raw[variant][("inter_process", "shmem_buffer", 1048576)][metric]
+            values = raw[variant][("inter_process", "shmem", 1048576)][metric]
             bins = range(0, x_limit + bin_width, bin_width)
             axis.hist(
-                values, bins=bins, alpha=0.45, color=color_for(variant, "shmem_buffer"),
-                edgecolor=color_for(variant, "shmem_buffer"), linewidth=0.7, label=LABELS[variant],
+                values, bins=bins, alpha=0.45, color=color_for(variant, "shmem"),
+                edgecolor=color_for(variant, "shmem"), linewidth=0.7, label=LABELS[variant],
             )
             axis.axvline(
-                median(values), color=color_for(variant, "shmem_buffer"),
+                median(values), color=color_for(variant, "shmem"),
                 linestyle="--", linewidth=1.5,
             )
         axis.set_xlim(0, x_limit)

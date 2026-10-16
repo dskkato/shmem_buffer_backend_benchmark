@@ -34,7 +34,7 @@ The matrix contains:
 - 30 messages per case at 10 Hz; 10 warm-up messages are excluded, leaving
   20 measured samples.
 - 2 communication modes: `inter_process` and `intra_process_va`.
-- 2 backends: `cpu` and `shmem_buffer` (called SHM below).
+- 2 backends: `cpu` and `shmem` (called SHM below).
 
 The summary contains 720 cases and the raw files contain 14,400 measured
 sample rows. The summary table cells below are calculated directly from the 100
