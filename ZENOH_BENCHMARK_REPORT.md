@@ -1,4 +1,4 @@
-# Zenoh vs fastrtps lazy shared-buffer rosidl buffer benchmark report
+# Zenoh vs fastrtps lazy shared-memory rosidl buffer benchmark report
 
 ## Executive summary
 
@@ -11,24 +11,24 @@ See: https://github.com/ros2/rmw_fastrtps/pull/904
 
 The main results are:
 
-- Inter-process shared-buffer p50 is close across all payloads: zenoh is within +0.6%
+- Inter-process shared-memory p50 is close across all payloads: zenoh is within +0.6%
   to +5.6% of fastrtps lazy, with a geometric-mean difference of only +1.9%.
   At 16 MiB, zenoh measures 768.0 µs versus 727.6 µs for fastrtps lazy.
-- At 1 MiB, zenoh shared-buffer end-to-end p50 is 971.4 µs versus 935.6 µs for
+- At 1 MiB, zenoh shared-memory end-to-end p50 is 971.4 µs versus 935.6 µs for
   fastrtps lazy (+3.8%). The p95 values are 1,102.7 µs and 1,050.5 µs.
 - Zenoh's inter-process CPU path is slower at small payloads (+31.1% p50 at
   64 B), but is 66.1% lower at 1 MiB and 59.1% lower at 4 MiB. At 16 MiB it
   is 13.1% higher, so this CPU result is not uniformly better.
-- At 1 MiB, zenoh reduces shared-buffer publisher `publish()` p50 by 58.8% versus
+- At 1 MiB, zenoh reduces shared-memory publisher `publish()` p50 by 58.8% versus
   fastrtps lazy (173.4 µs versus 421.5 µs), but the end-to-end path is nearly
   tied because it includes transport and subscriber-side work.
 
 The practical conclusion is that zenoh and the expected upstream fastrtps
-lazy implementation provide very similar inter-process shared-buffer end-to-end
+lazy implementation provide very similar inter-process shared-memory end-to-end
 latency. Zenoh has a distinct CPU-path profile: higher small-message overhead,
 but much lower CPU-path latency at 1--4 MiB.
 
-![Inter-process shared-buffer latency across all sizes](figures/zenoh-comparison/inter-process-memfd-latency.png)
+![Inter-process shared-memory latency across all sizes](figures/zenoh-comparison/inter-process-memfd-latency.png)
 
 ## Measurement design
 
@@ -63,7 +63,7 @@ All reported percentiles use the benchmark's lower-rank order-statistic rule;
 the p50 and p95 tables below are calculated over 100 raw samples (five
 repeats × 20 measured messages) per case.
 
-## Inter-process shared-buffer results
+## Inter-process shared-memory results
 
 Values are microseconds, shown as `p50 / p95`.
 
@@ -79,20 +79,20 @@ Values are microseconds, shown as `p50 / p95`.
 | 4 MiB | 915.6 / 1,049.2 | 917.1 / 1,057.0 | +0.2% |
 | 16 MiB | 727.6 / 805.7 | 768.0 / 860.5 | +5.6% |
 
-![Inter-process shared-buffer p50 comparison](figures/zenoh-comparison/inter-process-memfd-latency.png)
+![Inter-process shared-memory p50 comparison](figures/zenoh-comparison/inter-process-memfd-latency.png)
 
-The shared-buffer curves are close at every size. The largest measured difference is
+The shared-memory curves are close at every size. The largest measured difference is
 at 16 MiB, where zenoh is 40.4 µs slower at p50; this is small compared with
 the multi-millisecond variation seen in the CPU path.
 
-## CPU and shared-buffer path comparison
+## CPU and shared-memory path comparison
 
 The paired figure shows p50 as opaque lines and p95 as faded lines for zenoh
 and fastrtps lazy.
 
-![Inter-process CPU and shared-buffer p50/p95 comparison](figures/zenoh-comparison/inter-process-backend-latency.png)
+![Inter-process CPU and shared-memory p50/p95 comparison](figures/zenoh-comparison/inter-process-backend-latency.png)
 
-At selected payload sizes, the inter-process CPU and shared-buffer results are:
+At selected payload sizes, the inter-process CPU and shared-memory results are:
 
 | Payload / backend | fastrtps lazy p50 / p95 (µs) | zenoh p50 / p95 (µs) | Zenoh p50 change |
 |---|---:|---:|---:|
@@ -114,9 +114,9 @@ At selected payload sizes, the inter-process CPU and shared-buffer results are:
 | CPU end-to-end | 13,005.8 / 13,638.0 | 4,412.8 / 4,877.5 | -66.1% |
 | shmem_buffer end-to-end | 935.6 / 1,050.5 | 971.4 / 1,102.7 | +3.8% |
 
-![1 MiB shared-buffer raw distributions](figures/zenoh-comparison/1m-memfd-distributions.png)
+![1 MiB shared-memory raw distributions](figures/zenoh-comparison/1m-memfd-distributions.png)
 
-The raw distributions show that zenoh's shared-buffer publisher timing is shifted
+The raw distributions show that zenoh's shared-memory publisher timing is shifted
 substantially left of fastrtps lazy. The end-to-end distributions are closer,
 because they also include transport scheduling, queueing, and subscriber-side
 work.
@@ -138,7 +138,7 @@ Start a local router and run the zenoh matrix:
 ```bash
 source ~/ros2_lyrical/install/setup.bash
 source install/setup.bash
-ros2 run rmw_zenoh_cpp rmw_zenohd > /tmp/shared-buffer-zenoh-router.log 2>&1 &
+ros2 run rmw_zenoh_cpp rmw_zenohd > /tmp/shared-memory-zenoh-router.log 2>&1 &
 python3 src/shared_buffer_backend_benchmark/shmem_buffer_backend_benchmark/scripts/run_e2e_benchmark.py \
   --rmw-implementation rmw_zenoh_cpp \
   --variant zenoh \

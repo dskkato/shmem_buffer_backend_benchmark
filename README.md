@@ -38,8 +38,8 @@ Run one end-to-end sweep:
 
 ```bash
 ros2 run shmem_buffer_backend_benchmark run_e2e_benchmark.py \
-  --output shared-buffer-pubsub-results.csv \
-  --raw-output shared-buffer-pubsub-raw.csv
+  --output shared-memory-pubsub-results.csv \
+  --raw-output shared-memory-pubsub-raw.csv
 ```
 
 The runner accepts any installed RMW implementation. For a zenoh run, start

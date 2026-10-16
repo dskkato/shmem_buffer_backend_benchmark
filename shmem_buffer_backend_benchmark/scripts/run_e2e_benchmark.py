@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run shared-buffer backend CPU/shared-buffer pub/sub latency comparisons."""
+"""Run shared-memory backend CPU/shared-memory pub/sub latency comparisons."""
 
 import argparse
 import csv
@@ -232,7 +232,7 @@ def run_intra_process_case(mode, size, count, rate, warmup, env, affinity, raw_d
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--output", default="shared-buffer-pubsub-results.csv")
+    parser.add_argument("--output", default="shared-memory-pubsub-results.csv")
     parser.add_argument(
         "--sizes",
         default="64,1024,4096,16384,65536,262144,1048576,4194304,16777216",

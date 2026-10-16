@@ -26,9 +26,9 @@ LABELS = {
 }
 PATHS = (
     ("inter_process", "cpu", "Inter-process CPU"),
-    ("inter_process", "shmem_buffer", "Inter-process shared buffer"),
+    ("inter_process", "shmem_buffer", "Inter-process shared-memory buffer"),
     ("intra_process_va", "cpu", "Intra-process CPU"),
-    ("intra_process_va", "shmem_buffer", "Intra-process shared buffer"),
+    ("intra_process_va", "shmem_buffer", "Intra-process shared-memory buffer"),
 )
 LATENCY_YLIM = (10, 3e4)
 
@@ -95,7 +95,7 @@ def plot_shmem_buffer_latency(data, output):
     axis.set_yscale("log")
     axis.set_ylim(*LATENCY_YLIM)
     axis.set_ylabel("End-to-end latency p50 (µs)")
-    axis.set_title("Inter-process shared-buffer latency: zenoh vs fastrtps lazy")
+    axis.set_title("Inter-process shared-memory latency: zenoh vs fastrtps lazy")
     axis.legend(ncol=2, frameon=False)
     figure.tight_layout()
     figure.savefig(output, dpi=180)
@@ -105,7 +105,7 @@ def plot_shmem_buffer_latency(data, output):
 def plot_backend_latency(data, output):
     figure, axes = plt.subplots(1, 2, figsize=(12, 5.2), sharey=True)
     for axis, backend, title in zip(
-        axes, ("cpu", "shmem_buffer"), ("CPU backend", "shared-buffer backend")
+        axes, ("cpu", "shmem_buffer"), ("CPU backend", "shared-memory backend")
     ):
         for variant, linestyle in (("lazy", "-"), ("zenoh", "--")):
             for percentile_name, alpha in (("p50", 1.0), ("p95", 0.48)):
